@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - StudentTracker</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #e9fffa 0%, #f6f8fc 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin:0; padding:0;
+    }
+    .centered {
+      max-width:400px;
+      margin:60px auto 0 auto;
+      text-align:center;
+      background:#fff;
+      box-shadow:0 8px 32px #0002;
+      border-radius:18px;
+      padding:40px 32px 32px 32px;
+      position:relative;
+      transition:box-shadow 0.2s;
+    }
+    .centered:hover {
+      box-shadow:0 12px 40px #0003;
+    }
+    h2 {
+      color:#2d6a4f;
+      letter-spacing:1px;
+      margin-bottom:24px;
+      font-size:2em;
+    }
+    .input {
+      width:94%;
+      margin:10px 0;
+      padding:12px 10px;
+      border-radius:8px;
+      border:1.5px solid #b7e4c7;
+      font-size:1.08em;
+      background:#f6f8fc;
+      transition:border 0.2s, box-shadow 0.2s;
+      box-shadow:0 2px 8px #0001;
+    }
+    .input:focus {
+      border-color:#40916c;
+      outline:none;
+      box-shadow:0 4px 16px #40916c22;
+    }
+    .btn {
+      width:100%;
+      margin:20px 0 0 0;
+      padding:14px 0;
+      background:linear-gradient(90deg,#40916c 60%,#52b788 100%);
+      color:white;
+      border:none;
+      border-radius:8px;
+      font-size:1.15em;
+      font-weight:500;
+      cursor:pointer;
+      box-shadow:0 2px 8px #40916c22;
+      transition:background 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover {
+      background:linear-gradient(90deg,#52b788 60%,#40916c 100%);
+      box-shadow:0 4px 16px #40916c33;
+    }
+    .error, .success {
+      display:none;
+      margin-top:10px;
+      font-size:1em;
+      border-radius:6px;
+      padding:10px 0 10px 36px;
+      box-shadow:0 2px 8px #0001;
+      position:relative;
+      text-align:left;
+      min-height:32px;
+      opacity:0;
+      animation: none;
+      z-index:2;
+    }
+    .error {
+      color:#d90429;
+      background:#ffeaea;
+    }
+    .error.show {
+      display:block;
+      opacity:1;
+      animation: fadeIn 0.3s, shake 0.3s;
+    }
+    .error:before {
+      content:'\26A0';
+      position:absolute;
+      left:12px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:1.2em;
+      color:#d90429;
+    }
+    .success {
+      color:#40916c;
+      background:#eaffea;
+    }
+    .success.show {
+      display:block;
+      opacity:1;
+      animation: fadeIn 0.3s, popUp 0.4s;
+    }
+    .success:before {
+      content:'\2714';
+      position:absolute;
+      left:12px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:1.2em;
+      color:#40916c;
+    }
+    @keyframes popUp {
+      0% { transform: scale(0.9); }
+      60% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    @keyframes fadeIn {
+      from { opacity:0; }
+      to { opacity:1; }
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+      100% { transform: translateX(0); }
+    }
+    .link {
+      color:#1b6ca8;
+      cursor:pointer;
+      text-decoration:underline;
+      font-size:1.05em;
+      font-weight:500;
+      transition:color 0.2s;
+    }
+    .link:hover {
+      color:#40916c;
+      text-decoration:none;
+    }
+    .form-toggle {
+      margin-top:14px;
+    }
+    .welcome {
+      margin-top:24px;
+      color:#888;
+      font-size:0.98em;
+      background:#f6f8fc;
+      border-radius:6px;
+      padding:10px 0;
+      box-shadow:0 2px 8px #0001;
+    }
+  </style>
+</head>
+<body>
+  <div class="centered">
+    <img src="classroom.png" alt="Student Tracker" style="margin-bottom:18px;">
+    <h2 style="color:#2d6a4f;letter-spacing:1px;">Student Tracker</h2>
+    <form id="loginForm">
+      <input type="text" id="loginUsername" class="input" placeholder="Username" autocomplete="username" required autofocus>
+      <input type="password" id="loginPassword" class="input" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit" class="btn">Login</button>
+    </form>
+    <div id="loginError" class="error"></div>
+    <form id="createForm" style="display:none;">
+      <input type="text" id="createUsername" class="input" placeholder="Username" autocomplete="username" required>
+      <div id="userExistsError" class="error"></div>
+      <input type="password" id="createPassword" class="input" placeholder="Password" autocomplete="new-password" required>
+      <input type="password" id="createConfirm" class="input" placeholder="Confirm Password" autocomplete="new-password" required>
+      <div id="passwordError" class="error"></div>
+      <button type="submit" class="btn">Create Account</button>
+      <div class="form-toggle">
+        <span id="toggleLogin" class="link">Back to Login</span>
+      </div>
+    </form>
+    <div id="createError" class="error"></div>
+    <div id="createSuccess" class="success"></div>
+    <div class="form-toggle" style="margin-top:18px;">
+      <span id="toggleCreate" class="link">Create Account</span>
+    </div>
+    <div class="welcome">
+      <span>Welcome! Please log in or create an account to manage your sections and students.</span>
+    </div>
+  </div>
+  <script>
+    // Helper functions for localStorage
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '{}');
+    }
+    function setUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+    function setCurrentUser(username) {
+      localStorage.setItem('currentUser', username);
+    }
+    function getCurrentUser() {
+      return localStorage.getItem('currentUser');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var loginForm = document.getElementById('loginForm');
+      var createForm = document.getElementById('createForm');
+      var loginError = document.getElementById('loginError');
+      var createError = document.getElementById('createError');
+      var toggleCreate = document.getElementById('toggleCreate');
+      var toggleLogin = document.getElementById('toggleLogin');
+      var userExistsError = document.getElementById('userExistsError');
+      var passwordError = document.getElementById('passwordError');
+      var createSuccess = document.getElementById('createSuccess');
+
+      // Toggle to Create Account form
+      if (toggleCreate) {
+        toggleCreate.onclick = function() {
+          loginForm.style.display = 'none';
+          createForm.style.display = '';
+          toggleCreate.style.display = 'none';
+          loginError.style.display = 'none';
+          createError.style.display = 'none';
+        };
+      }
+      // Toggle back to Login form
+      if (toggleLogin) {
+        toggleLogin.onclick = function() {
+          loginForm.style.display = '';
+          createForm.style.display = 'none';
+          toggleCreate.style.display = '';
+          loginError.style.display = 'none';
+          createError.style.display = 'none';
+          userExistsError.style.display = 'none';
+          passwordError.style.display = 'none';
+        };
+      }
+
+      // Login logic (users only)
+      if (loginForm) {
+        loginForm.onsubmit = function(e) {
+          e.preventDefault();
+          loginError.classList.remove('show');
+          loginError.style.display = 'none';
+          loginError.textContent = '';
+          var username = loginForm.loginUsername.value.trim();
+          var password = loginForm.loginPassword.value;
+          var users = getUsers();
+          if (!username || !password) {
+            loginError.textContent = 'Please enter both username and password.';
+            loginError.style.display = 'block';
+            setTimeout(function(){ loginError.classList.add('show'); }, 10);
+            return;
+          }
+          if (users[username] && users[username] === password) {
+            setCurrentUser(username);
+            window.location.href = 'homepage.html';
+          } else {
+            loginError.textContent = 'Invalid username or password.';
+            loginError.style.display = 'block';
+            setTimeout(function(){ loginError.classList.add('show'); }, 10);
+          }
+        };
+      }
+
+      // Create Account logic
+      if (createForm) {
+        createForm.onsubmit = function(e) {
+          e.preventDefault();
+          userExistsError.classList.remove('show');
+          passwordError.classList.remove('show');
+          createError.classList.remove('show');
+          createSuccess.classList.remove('show');
+          userExistsError.style.display = 'none';
+          passwordError.style.display = 'none';
+          createError.style.display = 'none';
+          createSuccess.style.display = 'none';
+          userExistsError.textContent = '';
+          passwordError.textContent = '';
+          createError.textContent = '';
+          createSuccess.textContent = '';
+          var username = createForm.createUsername.value.trim();
+          var password = createForm.createPassword.value;
+          var confirm = createForm.createConfirm.value;
+          if (!username || !password || !confirm) {
+            createError.textContent = 'All fields are required.';
+            createError.style.display = 'block';
+            setTimeout(function(){ createError.classList.add('show'); }, 10);
+            return;
+          }
+          if (password.length < 4) {
+            passwordError.textContent = 'Password must be at least 4 characters.';
+            passwordError.style.display = 'block';
+            setTimeout(function(){ passwordError.classList.add('show'); }, 10);
+            return;
+          }
+          if (password !== confirm) {
+            passwordError.textContent = 'Passwords do not match.';
+            passwordError.style.display = 'block';
+            setTimeout(function(){ passwordError.classList.add('show'); }, 10);
+            return;
+          }
+          var users = getUsers();
+          if (users[username]) {
+            userExistsError.textContent = 'Account already exists.';
+            userExistsError.style.display = 'block';
+            setTimeout(function(){ userExistsError.classList.add('show'); }, 10);
+            return;
+          }
+          users[username] = password;
+          setUsers(users);
+          setCurrentUser(username);
+          window.location.href = 'homepage.html';
+        };
+      }
+    });
+  </script>
+  <script src="homepage.js"></script>
+</body>
+</html>
